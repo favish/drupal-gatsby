@@ -15,8 +15,8 @@ const ArticleList = ({ data }) => (
           <div>Created <b>{ moment(node.created).fromNow() }</b></div>
           <div dangerouslySetInnerHTML={{ __html: node.body.value }} />
           {
-            node.relationships['field_image'].localFile.childImageSharp
-              ? <Img fluid={node.relationships['field_image'].localFile.childImageSharp.fluid} />
+            node.relationships.field_image.localFile.childImageSharp
+              ? <Img fluid={node.relationships.field_image.localFile.childImageSharp.fluid} />
               : null
           }
         </div>
@@ -43,11 +43,9 @@ export const query = graphql`
                             childImageSharp {
                                 fluid(
                                     maxWidth: 1060,
-                                    traceSVG: { color: "lightgray", optTolerance: 0.4, turdSize: 100, turnPolicy: TURNPOLICY_MAJORITY, },
                                     quality: 100,
-                                    jpegProgressive: false
                                 ) {
-                                    ...GatsbyImageSharpFluid
+                                    ...GatsbyImageSharpFluid_tracedSVG
                                     presentationWidth
                                 }
                             }
