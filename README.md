@@ -2,6 +2,8 @@
 
 This is a very basic starter project with everything included to quickly mess around with a Drupal powered Gatsby site.
 
+Project is inspired by [this blog post from Evolving Web](https://evolvingweb.ca/blog/decoupling-drupal-gatsby)
+
 **This is *not* intended for use in production. At the very least, the included `settings.php` would need to be updated.**
 
 ## Requirements

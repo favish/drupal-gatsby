@@ -8,17 +8,12 @@ services:
       context: ./gatsby
       dockerfile: Dockerfile.dev
     volumes:
-    - ./gatsby/src:/app/src:cached
+    - ./gatsby:/app
     - ./gatsby/public:/app/public:delegated
-    - ./gatsby/gatsby-config.js:/app/gatsby-config.js
-    - ./gatsby/gatsby-node.js:/app/gatsby-node.js
-    - ./gatsby/package.json:/app/package.json
-    - ./gatsby/package-lock.json:/app/package-lock.json
-    - ./gatsby/yarn.lock:/app/yarn.lock
-    # Retain between builds for cache
+    - ./gatsby/src:/app/src:cached
+    - gatsby_cache:/app/.cache
     - node_modules:/app/node_modules
     - npm:/root/.npm
-
 
   nginx:
     image: favish/nginx-1.11-drupal-8-local-dev:1.4.0
@@ -74,5 +69,6 @@ services:
 
 volumes:
   mysql:
+  gatsby_cache:
   npm:
   node_modules:
