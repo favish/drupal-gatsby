@@ -1,0 +1,14 @@
+uuid: 9d3f454a-9c1c-48e3-a13b-3d6e6b26620b
+name: 'Drupal Gatsby'
+mail: admin@example.com
+slogan: 'Drupal site intended to be powered by Gatsby.js'
+page:
+  403: ''
+  404: ''
+  front: /node
+admin_compact_mode: false
+weight_select_max: 100
+langcode: en
+default_langcode: en
+_core:
+  default_config_hash: yXadRE77Va-G6dxhd2kPYapAvbnSvTF6hO4oXiOEynI

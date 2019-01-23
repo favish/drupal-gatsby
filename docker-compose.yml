@@ -1,0 +1,78 @@
+version: '2'
+services:
+  gatsby:
+    image: local/gatsby-dev:drupal-gatsby
+    ports:
+      - 8000:8000
+    build:
+      context: ./gatsby
+      dockerfile: Dockerfile.dev
+    volumes:
+    - ./gatsby/src:/app/src:cached
+    - ./gatsby/public:/app/public:delegated
+    - ./gatsby/gatsby-config.js:/app/gatsby-config.js
+    - ./gatsby/gatsby-node.js:/app/gatsby-node.js
+    - ./gatsby/package.json:/app/package.json
+    - ./gatsby/package-lock.json:/app/package-lock.json
+    - ./gatsby/yarn.lock:/app/yarn.lock
+    # Retain between builds for cache
+    - node_modules:/app/node_modules
+    - npm:/root/.npm
+
+
+  nginx:
+    image: favish/nginx-1.11-drupal-8-local-dev:1.4.0
+    volumes:
+    - ./drupal:/var/www
+    ports:
+    - 80:80
+    links:
+    - php
+    depends_on:
+    - php
+    - xdebug
+
+  php:
+    build: ./drupal/.docker/php
+    links:
+    - db
+    volumes:
+    - ./drupal:/var/www:cached
+    - ./drupal/vendor:/var/www/vendor:delegated
+    - ./drupal/config:/var/www/config:delegated
+    - ./drupal/.docker/php/zzz-custom.ini:/usr/local/etc/php/conf.d/zzz-custom.ini:cached
+    - ./drupal/.docker/php/zzz-custom.conf:/usr/local/etc/php-fpm.d/zzz-custom.conf:cached
+    expose:
+    - 9000
+    env_file:
+    - ./drupal/.docker/php/php.env
+
+  # Alternate php process utilized if xdebug cookie is present in requests
+  xdebug:
+    build: ./drupal/.docker/xdebug
+    volumes:
+    - ./drupal/.docker/xdebug/zz-xdebug.ini:/usr/local/etc/php/conf.d/zz-xdebug.ini:cached
+    volumes_from:
+    - php
+    links:
+    - db
+    expose:
+    - 9000
+    env_file:
+    - ./drupal/.docker/php/php.env
+
+  db:
+    image: mariadb:10.3
+    volumes:
+    - ./drupal:/var/www
+    - mysql:/var/lib/mysql
+    environment:
+    - MYSQL_ROOT_PASSWORD=docker
+    - MYSQL_DATABASE=docker
+    - MYSQL_USER=docker
+    - MYSQL_PASSWORD=docker
+
+volumes:
+  mysql:
+  npm:
+  node_modules:
